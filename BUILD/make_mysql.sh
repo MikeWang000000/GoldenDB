@@ -326,7 +326,7 @@ do_make()
     message "Make : cmake finished"
     
     # make 
-    make -j16 && make install  2>&1 | tee -a $me_file_path
+    make -j4 && make install  2>&1 | tee -a $me_file_path
     if [ "$?" -ne 0 ]; then
         message "cmake return value is not 0, build exit"
         exit 1
