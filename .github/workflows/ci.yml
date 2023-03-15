@@ -15,30 +15,31 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
-          yum -y update
           yum -y install git tar zip unzip centos-release-scl epel-release
           yum -y install devtoolset-7 cmake3 bison openssl-devel ncurses-devel unixODBC-devel cyrus-sasl-devel openldap-devel
           ln -fs /usr/bin/cmake3 /usr/bin/cmake
       - name: Compile and bundle project
         run: |
           export PATH="/opt/rh/devtoolset-7/root/bin:${PATH}"
-          cd '${{ github.workspace }}'/BUILD
+          code_dir="$(pwd)"
+          cd BUILD
           bash make_mysql.sh
           rm -rf "/home/pkg"
           mkdir -p "/home/pkg"
           mkdir -p "/home/pkg/install/rdb/rdb64_for_redhatlinux"
           mkdir -p "/home/pkg/install/rdb/mysql_client_for_alllinux"
-          cp "${{ github.workspace }}/COPYING" "/home/pkg/"
-          cp "${{ github.workspace }}/ChangeLog.txt" "/home/pkg/"
-          cp -rf "${{ github.workspace }}/manual" "/home/pkg/"
-          cp -rf "${{ github.workspace }}/autoupdate" "/home/pkg/"
+          cp "${code_dir}/COPYING" "/home/pkg/"
+          cp "${code_dir}/ChangeLog.txt" "/home/pkg/"
+          cp -rf "${code_dir}/manual" "/home/pkg/"
+          cp -rf "${code_dir}/autoupdate" "/home/pkg/"
           cp ~/"mysql64_linux.tar.gz" "/home/pkg/install/rdb/rdb64_for_redhatlinux/"
           cp ~/"mysql_commlib.tar.gz" "/home/pkg/install/rdb/rdb64_for_redhatlinux/"
           cp ~/"mysql_client.tar.gz" "/home/pkg/install/rdb/mysql_client_for_alllinux/mysql64_client_for_redhatlinux.tar.gz"
           cp -f ~/"replace_client.py" "/home/pkg/install/rdb/mysql_client_for_alllinux/"
-          cd "/home/pkg" && zip -r "${{ github.workspace }}/GoldenDB_DN.zip" autoupdate/ manual/ install/ COPYING ChangeLog.txt
+          cd "/home/pkg" && zip -r "${code_dir}/GoldenDB_DN.zip" autoupdate/ manual/ install/ COPYING ChangeLog.txt
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
           name: GoldenDB DN
+          if-no-files-found: error
           path: ${{ github.workspace }}/GoldenDB_DN.zip
