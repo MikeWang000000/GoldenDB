@@ -31,8 +31,6 @@ jobs:
           cp -rf "${code_dir}/autoupdate" "/home/pkg/"
           cp ~/"mysql64_linux.tar.gz" "/home/pkg/install/rdb/rdb64_for_redhatlinux/"
           cp ~/"mysql_commlib.tar.gz" "/home/pkg/install/rdb/rdb64_for_redhatlinux/"
-          cp ~/"mysql_client.tar.gz" "/home/pkg/install/rdb/mysql_client_for_alllinux/mysql64_client_for_redhatlinux.tar.gz"
-          cp -f ~/"replace_client.py" "/home/pkg/install/rdb/mysql_client_for_alllinux/"
           cd "/home/pkg" && zip -r "${code_dir}/GoldenDB_DN.zip" autoupdate/ manual/ install/ COPYING ChangeLog.txt
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
